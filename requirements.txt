@@ -1,0 +1,5 @@
+gspread
+slack-bolt
+slack-sdk
+apscheduler
+python-dotenv
