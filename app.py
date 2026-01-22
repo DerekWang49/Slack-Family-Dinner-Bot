@@ -17,6 +17,7 @@ from pytz import timezone
 # the current week's cooks/cleaners
 # TODO: Mentions
 # TODO: Classes/functions?
+# TODO: Catch errors in actual run script
 
 
 # Logging into Google Sheet
