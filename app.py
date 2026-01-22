@@ -12,6 +12,7 @@ from datetime import datetime
 from slack_sdk import WebClient
 from apscheduler.schedulers.background import BackgroundScheduler
 from pytz import timezone
+import json
 
 # Create "special time". When special time is reached, display
 # the current week's cooks/cleaners
@@ -20,9 +21,20 @@ from pytz import timezone
 # TODO: Catch errors in actual run script
 
 
+# Debugging Log
+logging.basicConfig(level=logging.DEBUG)
+
+# Load secret tokens from the .env file
+load_dotenv()
+
 # Logging into Google Sheet
 
-credentials_file = "credentials.json"
+credentials_file = os.getenv("CREDENTIALS_PATH")
+
+if not credentials_file:
+    raise RuntimeError("CREDENTIALS_PATH is not set")
+# credentials_file = "credentials.json"
+print(credentials_file)
 gc = None
 try:
     gc = gspread.service_account(filename=credentials_file)
@@ -44,12 +56,6 @@ except Exception as e:
     print(f"Error: {e}")
     exit()
 
-
-# Debugging Log
-logging.basicConfig(level=logging.DEBUG)
-
-# Load secret tokens from the .env file
-load_dotenv()
 
 # Clients
 # Starts bot and retrieves signing secret
