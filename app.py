@@ -194,7 +194,7 @@ print(time_test)
 if __name__ == "__main__":
     scheduler = BackgroundScheduler(timezone=timezone("US/Central"))
     # TODO: Add day
-    scheduler.add_job(send_scheduled_message, "cron", day_of_week='thu', hour=13, minute=35)
+    scheduler.add_job(send_scheduled_message, "cron", day_of_week='thu', hour=13, minute=45)
     # scheduler.add_job(send_scheduled_message, "interval", seconds=30)
     print("Test1")
     scheduler.start()
