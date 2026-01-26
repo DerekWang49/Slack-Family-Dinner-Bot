@@ -13,10 +13,11 @@ from slack_sdk import WebClient
 from apscheduler.schedulers.background import BackgroundScheduler
 from pytz import timezone
 import json
+import pprint
 
 # Create "special time". When special time is reached, display
 # the current week's cooks/cleaners
-# TODO: Mentions
+# TODO: Mentions (Have option to not mention if person is not found in database)
 # TODO: Classes/functions?
 # TODO: Catch errors in actual run script
 
@@ -94,7 +95,7 @@ df = df.reset_index(drop=True)
 
 # TODO: Switch back to actual today
 today = datetime.today()
-# today = datetime(2026, 2, 2)
+# today = datetime(2026, 5, 7)
 # date_format = "%m/%d/%Y"
 # today = today.strftime(date_format)
 
@@ -139,13 +140,27 @@ print(cleaners)
 cooking_crew = ":cook: Cooking Crew: "
 cleaning_crew = ":broom: Cleaning Crew: "
 
+with open('slack_user_id.json') as json_user_data:
+    user_data = json.load(json_user_data)
+
+# if "Derek" in user_data:
+#     print(f'Derek\'s id: {user_data["Derek"]}')
+
 # Add names to the string
 for i in range(len(cooks)):
-    cooking_crew += str(cooks[i])
+    if (cooks[i] in user_data):
+        cooking_crew += f"<@{user_data[cooks[i]]}>"
+    else:
+        cooking_crew += str(cooks[i])
     if i != len(cooks) - 1:
         cooking_crew += ", "
 for i in range(len(cleaners)):
-    cleaning_crew += str(cleaners[i])
+    if (cleaners[i] in user_data):
+        cleaning_crew += f"<@{user_data[cleaners[i]]}>"
+        print("I'm still standing")
+    else:
+        cleaning_crew += str(cleaners[i])
+
     if i != len(cleaners) - 1:
         cleaning_crew += ", "
 
@@ -198,12 +213,13 @@ def send_scheduled_message():
 
 time_test = datetime.now()
 print(time_test)
+print()
 
 if __name__ == "__main__":
     scheduler = BackgroundScheduler(timezone=timezone("US/Central"))
     # TODO: Add day
-    scheduler.add_job(send_scheduled_message, "cron", day_of_week='mon', hour=11, minute=00)
-    # scheduler.add_job(send_scheduled_message, "interval", seconds=30)
+    # scheduler.add_job(send_scheduled_message, "cron", day_of_week='mon', hour=11, minute=00)
+    scheduler.add_job(send_scheduled_message, "interval", seconds=30)
     print("Test1")
     scheduler.start()
     # Get app token from environment variable
