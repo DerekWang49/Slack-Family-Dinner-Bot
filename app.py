@@ -17,7 +17,6 @@ import pprint
 
 # Create "special time". When special time is reached, display
 # the current week's cooks/cleaners
-# TODO: Mentions (Have option to not mention if person is not found in database)
 # TODO: Classes/functions?
 # TODO: Catch errors in actual run script
 
@@ -93,9 +92,21 @@ df = df.drop(index=0)
 # Clean up index
 df = df.reset_index(drop=True)
 
-# TODO: Switch back to actual today
+
+ENV = os.getenv("BOT_ENV", "development")
+testing = True
+# Only send to real channel instead of bot testing channel once changes
+# have been committed to the VM version
+if ENV == "production":
+    print("Production!")
+    testing = False
+
+print(testing)
+
+
 today = datetime.today()
-# today = datetime(2026, 5, 7)
+if testing:
+    today = datetime(2026, 5, 7)
 # date_format = "%m/%d/%Y"
 # today = today.strftime(date_format)
 
@@ -193,16 +204,6 @@ combined_text = formatted_date + "\n" \
                 + cleaning_crew
 print(combined_text)
 
-ENV = os.getenv("BOT_ENV", "development")
-testing = True
-# Only send to real channel instead of bot testing channel once changes
-# have been committed to the VM version
-if ENV == "production":
-    print("Production!")
-    testing = False
-
-print(testing)
-# TODO: Change text output from formatted date to all data
 def send_scheduled_message():
     channel = "#bot-testing"
     if not testing:
@@ -210,6 +211,21 @@ def send_scheduled_message():
     client.chat_postMessage(channel=channel,
                             text=combined_text)
     print("Sent!!!!")
+
+def send_direct_message():
+    for i in range(len(cooks)):
+        cook_text = "This is a reminder that you are on cooking crew for this Sunday's family dinner! :relaxed:"
+        if cooks[i] in user_data:
+            client.chat_postMessage(channel=user_data[cooks[i]],
+                                    text=cook_text)
+            print("Direct message sent")
+    for i in range(len(cleaners)):
+        clean_text = "This is a reminder that you are on cleaning crew for this Sunday's family dinner! :relaxed:"
+        if cleaners[i] in user_data:
+            client.chat_postMessage(channel=user_data[cleaners[i]], text=clean_text)
+            print("Direct message sent")
+
+
 
 time_test = datetime.now()
 print(time_test)
@@ -220,6 +236,7 @@ if __name__ == "__main__":
     # TODO: Add day
     scheduler.add_job(send_scheduled_message, "cron", day_of_week='mon', hour=11, minute=00)
     scheduler.add_job(send_scheduled_message, "cron", day_of_week='fri', hour=11, minute=00)
+    scheduler.add_job(send_direct_message, "interval", seconds=30)
     # scheduler.add_job(send_scheduled_message, "interval", seconds=30)
     scheduler.start()
     # Get app token from environment variable
