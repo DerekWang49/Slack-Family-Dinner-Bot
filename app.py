@@ -119,7 +119,6 @@ def main():
 
     print(state.testing)
 
-    # TODO: Change back
     today = datetime.today()
     if state.testing:
         today = datetime.today()
@@ -262,8 +261,6 @@ if __name__ == "__main__":
     # TODO: Add day
     scheduler.add_job(send_scheduled_message, "cron", day_of_week='mon', hour=15, minute=30)
     scheduler.add_job(send_direct_message, "cron", day_of_week='fri', hour=11, minute=00)
-    # TODO: Please remove
-    scheduler.add_job(send_direct_message, "cron", day_of_week='sat', hour=23, minute=40)
     scheduler.start()
     # Get app token from environment variable
     handler = SocketModeHandler(app, os.environ.get("SLACK_APP_TOKEN"))
