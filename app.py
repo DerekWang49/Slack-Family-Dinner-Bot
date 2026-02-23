@@ -265,6 +265,9 @@ if __name__ == "__main__":
     client = WebClient(token=os.environ.get("SLACK_BOT_TOKEN"))
     main()
     scheduler = BackgroundScheduler(timezone=timezone("US/Central"))
+    scheduler.add_job(send_test_message, "cron", day_of_week='mon', hour=9, minute=00)
+    scheduler.add_job(send_test_message, "cron", day_of_week='mon', hour=13, minute=00)
+
 
     scheduler.add_job(send_scheduled_message, "cron", day_of_week='mon', hour=16, minute=40)
     scheduler.add_job(send_direct_message, "cron", day_of_week='fri', hour=11, minute=00)
