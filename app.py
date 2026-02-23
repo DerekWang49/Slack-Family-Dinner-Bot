@@ -275,9 +275,9 @@ if __name__ == "__main__":
     scheduler.add_job(send_test_message, "cron", day_of_week='mon', hour=9, minute=00)
     scheduler.add_job(send_test_message, "cron", day_of_week='mon', hour=10, minute=00)
     scheduler.add_job(send_test_message, "cron", day_of_week='mon', hour=13, minute=00)
-    scheduler.add_job(send_test_message, "cron", day_of_week='mon', hour=16, minute=26)
+    scheduler.add_job(send_test_message, "cron", day_of_week='mon', hour=16, minute=30)
 
-    scheduler.add_job(send_scheduled_message, "cron", day_of_week='mon', hour=16, minute=30)
+    scheduler.add_job(send_scheduled_message, "cron", day_of_week='mon', hour=16, minute=35)
     scheduler.add_job(send_direct_message, "cron", day_of_week='fri', hour=11, minute=00)
     scheduler.start()
     # Get app token from environment variable
