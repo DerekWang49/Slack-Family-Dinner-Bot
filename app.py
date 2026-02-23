@@ -32,15 +32,9 @@ class VarStates:
         self.combined_text = None
 
 
-state = VarStates()
-# Load secret tokens from the .env file
-load_dotenv()
 
 
-# Clients
-# Starts bot and retrieves signing secret
-app = App(token=os.environ.get("SLACK_BOT_TOKEN"))
-client = WebClient(token=os.environ.get("SLACK_BOT_TOKEN"))
+
 
 def main():
 
@@ -219,12 +213,12 @@ def main():
 
 
 
-# Listens to mention of the bot
-@app.event("app_mention")
-def handle_mention(event, say):
-    say(f"{state.formatted_date}")
-    say(f"{state.cooking_crew}")
-    say(f"{state.cleaning_crew}")
+# # Listens to mention of the bot
+# @app.event("app_mention")
+# def handle_mention(event, say):
+#     say(f"{state.formatted_date}")
+#     say(f"{state.cooking_crew}")
+#     say(f"{state.cleaning_crew}")
 
 
 
@@ -235,6 +229,12 @@ def send_scheduled_message():
     client.chat_postMessage(channel=channel,
                             text=state.combined_text)
     print("Sent!!!!")
+    # client.chat_postMessage(channel="U03V7H9B9JB", text=state.combined_text)
+    # print("Sent to Derek")
+
+def send_test_message():
+    client.chat_postMessage(channel="U03V7H9B9JB", text=state.combined_text)
+    print("Sent to Derek")
 
 def send_direct_message():
     for i in range(len(state.cooks)):
@@ -256,10 +256,27 @@ print(time_test)
 print()
 
 if __name__ == "__main__":
+    state = VarStates()
+    # Load secret tokens from the .env file
+    load_dotenv()
+    # Clients
+    # Starts bot and retrieves signing secret
+    app = App(token=os.environ.get("SLACK_BOT_TOKEN"))
+    client = WebClient(token=os.environ.get("SLACK_BOT_TOKEN"))
     main()
     scheduler = BackgroundScheduler(timezone=timezone("US/Central"))
-    # TODO: Add day
-    scheduler.add_job(send_scheduled_message, "cron", day_of_week='mon', hour=15, minute=30)
+    scheduler.add_job(send_test_message, "cron", day_of_week='mon', hour=16, minute=21)
+    scheduler.add_job(send_test_message, "cron", day_of_week='tue', hour=16, minute=21)
+    scheduler.add_job(send_test_message, "cron", day_of_week='wed', hour=16, minute=21)
+    scheduler.add_job(send_test_message, "cron", day_of_week='thur', hour=16, minute=21)
+    scheduler.add_job(send_test_message, "cron", day_of_week='fri', hour=16, minute=21)
+    scheduler.add_job(send_test_message, "cron", day_of_week='sat', hour=16, minute=21)
+    scheduler.add_job(send_test_message, "cron", day_of_week='sun', hour=16, minute=21)
+    scheduler.add_job(send_test_message, "cron", day_of_week='mon', hour=9, minute=00)
+    scheduler.add_job(send_test_message, "cron", day_of_week='mon', hour=10, minute=00)
+    scheduler.add_job(send_test_message, "cron", day_of_week='mon', hour=13, minute=00)
+
+    scheduler.add_job(send_scheduled_message, "cron", day_of_week='mon', hour=16, minute=30)
     scheduler.add_job(send_direct_message, "cron", day_of_week='fri', hour=11, minute=00)
     scheduler.start()
     # Get app token from environment variable
