@@ -234,7 +234,6 @@ def send_scheduled_message():
 
 def send_test_message():
     client.chat_postMessage(channel="U03V7H9B9JB", text=state.combined_text)
-
     print("Sent to Derek")
 
 def send_direct_message():
@@ -257,21 +256,21 @@ print(time_test)
 print()
 
 if __name__ == "__main__":
-    app = App(token=os.environ.get("SLACK_BOT_TOKEN"))
-    client = WebClient(token=os.environ.get("SLACK_BOT_TOKEN"))
     state = VarStates()
     # Load secret tokens from the .env file
     load_dotenv()
     # Clients
     # Starts bot and retrieves signing secret
+    app = App(token=os.environ.get("SLACK_BOT_TOKEN"))
+    client = WebClient(token=os.environ.get("SLACK_BOT_TOKEN"))
     main()
     scheduler = BackgroundScheduler(timezone=timezone("US/Central"))
-    scheduler.add_job(send_test_message, "cron", day_of_week='mon', hour=9, minute=00)
-    scheduler.add_job(send_test_message, "cron", day_of_week='mon', hour=10, minute=5)
+    scheduler.add_job(send_test_message, "cron", day_of_week='mon', hour=9, minute=0)
+    scheduler.add_job(send_test_message, "cron", day_of_week='mon', hour=10, minute=2)
 
 
     scheduler.add_job(send_scheduled_message, "cron", day_of_week='mon', hour=18, minute=30)
-    scheduler.add_job(send_direct_message, "cron", day_of_week='fri', hour=11, minute=00)
+    scheduler.add_job(send_direct_message, "cron", day_of_week='fri', hour=11, minute=0)
     scheduler.start()
     # Get app token from environment variable
     handler = SocketModeHandler(app, os.environ.get("SLACK_APP_TOKEN"))
