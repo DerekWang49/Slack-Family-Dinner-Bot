@@ -33,9 +33,7 @@ class VarStates:
 
 
 
-
-
-
+state = VarStates()
 def main():
 
     # Debugging Log
@@ -223,6 +221,8 @@ def main():
 
 
 def send_scheduled_message():
+    global state
+    main()
     channel = "#bot-testing"
     if not state.testing:
         channel = "#announcements"
@@ -233,10 +233,14 @@ def send_scheduled_message():
     # print("Sent to Derek")
 
 def send_test_message():
+    global state
+    main()
     client.chat_postMessage(channel="U03V7H9B9JB", text=state.combined_text)
     print("Sent to Derek")
 
 def send_direct_message():
+    global state
+    main()
     for i in range(len(state.cooks)):
         cook_text = "This is a reminder that you are on cooking crew for this Sunday's family dinner! :relaxed:"
         if state.cooks[i] in state.user_data:
@@ -256,14 +260,12 @@ print(time_test)
 print()
 
 if __name__ == "__main__":
-    state = VarStates()
     # Load secret tokens from the .env file
     load_dotenv()
     # Clients
     # Starts bot and retrieves signing secret
     app = App(token=os.environ.get("SLACK_BOT_TOKEN"))
     client = WebClient(token=os.environ.get("SLACK_BOT_TOKEN"))
-    main()
     scheduler = BackgroundScheduler(timezone=timezone("US/Central"))
     scheduler.add_job(send_test_message, "cron", day_of_week='mon', hour=9, minute=0)
     scheduler.add_job(send_test_message, "cron", day_of_week='mon', hour=10, minute=2)
