@@ -269,6 +269,7 @@ if __name__ == "__main__":
     scheduler = BackgroundScheduler(timezone=timezone("US/Central"))
     scheduler.add_job(send_test_message, "cron", day_of_week='mon', hour=9, minute=0)
     scheduler.add_job(send_test_message, "cron", day_of_week='mon', hour=10, minute=2)
+    scheduler.add_job(send_test_message, "cron", day_of_week='fri', hour=15, minute=27)
 
 
     scheduler.add_job(send_scheduled_message, "cron", day_of_week='mon', hour=18, minute=30)
